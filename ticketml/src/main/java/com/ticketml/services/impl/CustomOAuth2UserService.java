@@ -32,7 +32,7 @@ public class CustomOAuth2UserService extends OidcUserService {
         String picture = oidcUser.getAttribute("picture");
         LocalDateTime createdDate = LocalDateTime.now();
 
-        User user = userRepository.findByEmail(email)
+        User user = userRepository.findByGoogleId(googleId)
                 .orElse(new User());
 
         user.setEmail(email);

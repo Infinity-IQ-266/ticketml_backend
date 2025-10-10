@@ -4,5 +4,6 @@ public enum OrderStatus {
     PENDING,    // chờ thanh toán hoặc xác nhận
     CONFIRMED,  // đã xác nhận
     CANCELED,   // bị hủy
-    USED        // vé đã được sử dụng
+    FAILED,
+    COMPLETED, USED        // vé đã được sử dụng
 }

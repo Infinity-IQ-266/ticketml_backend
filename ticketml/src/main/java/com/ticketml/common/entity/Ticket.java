@@ -1,6 +1,6 @@
 package com.ticketml.common.entity;
 
-import com.ticketml.common.enums.BookingStatus;
+import com.ticketml.common.enums.TicketStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +20,7 @@ public class Ticket extends Auditable {
     private boolean checkedIn = false;
 
     @Enumerated(EnumType.STRING)
-    private BookingStatus status;
+    private TicketStatus status;
 
     @ManyToOne
     @JoinColumn(name = "order_item_id")

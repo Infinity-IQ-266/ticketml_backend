@@ -1,6 +1,6 @@
 package com.ticketml.common.entity;
 
-import com.ticketml.common.enums.TicketStatus;
+import com.ticketml.common.enums.TicketTypeStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -24,7 +24,7 @@ public class TicketType extends Auditable {
     private int remainingQuantity;
 
     @Enumerated(EnumType.STRING)
-    private TicketStatus status;
+    private TicketTypeStatus status;
 
     @ManyToOne
     @JoinColumn(name = "event_id")

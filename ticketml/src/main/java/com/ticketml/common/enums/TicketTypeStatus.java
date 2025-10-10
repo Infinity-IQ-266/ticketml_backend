@@ -1,7 +1,8 @@
 package com.ticketml.common.enums;
 
-public enum BookingStatus {
+public enum TicketTypeStatus {
     ACTIVE,
-    USED,
+    SOLD_OUT,
     CANCELED
 }
+

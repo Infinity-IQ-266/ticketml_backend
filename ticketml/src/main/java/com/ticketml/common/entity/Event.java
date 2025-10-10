@@ -2,6 +2,8 @@ package com.ticketml.common.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +22,8 @@ public class Event extends Auditable {
     private String title;
     @Column(length = 1000)
     private String description;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String location;
 
     @ManyToOne(fetch = FetchType.LAZY)
