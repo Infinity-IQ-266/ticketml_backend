@@ -6,7 +6,7 @@ import com.ticketml.common.entity.TicketType;
 import com.ticketml.common.entity.User;
 import com.ticketml.common.enums.ErrorMessage;
 import com.ticketml.common.enums.OrganizerRole;
-import com.ticketml.converter.TicketConverter;
+import com.ticketml.converter.TicketTypeConverter;
 import com.ticketml.exception.ForbiddenException;
 import com.ticketml.exception.NotFoundException;
 import com.ticketml.repository.OrganizerMembershipRepository;
@@ -19,13 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TicketTypeServiceImpl implements TicketTypeService {
     private final TicketTypeRepository ticketTypeRepository;
-    private final TicketConverter ticketConverter;
+    private final TicketTypeConverter ticketTypeConverter;
     private final UserRepository userRepository;
     private final OrganizerMembershipRepository membershipRepository;
 
-    public TicketTypeServiceImpl(TicketTypeRepository ticketTypeRepository, TicketConverter ticketConverter, UserRepository userRepository, OrganizerMembershipRepository membershipRepository) {
+    public TicketTypeServiceImpl(TicketTypeRepository ticketTypeRepository, TicketTypeConverter ticketTypeConverter, UserRepository userRepository, OrganizerMembershipRepository membershipRepository) {
         this.ticketTypeRepository = ticketTypeRepository;
-        this.ticketConverter = ticketConverter;
+        this.ticketTypeConverter = ticketTypeConverter;
         this.userRepository = userRepository;
         this.membershipRepository = membershipRepository;
     }
@@ -53,6 +53,6 @@ public class TicketTypeServiceImpl implements TicketTypeService {
             ticketType.setTotalQuantity(requestDTO.getTotalQuantity());
         }
         TicketType updatedTicketType = ticketTypeRepository.save(ticketType);
-        return ticketConverter.convertToResponseDTO(updatedTicketType);
+        return ticketTypeConverter.convertToResponseDTO(updatedTicketType);
     }
 }

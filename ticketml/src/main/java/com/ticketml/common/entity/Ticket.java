@@ -10,6 +10,27 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "tickets")
 @EqualsAndHashCode(callSuper = true)
+@NamedEntityGraph(
+        name = "Ticket.withDetails",
+        attributeNodes = {
+                @NamedAttributeNode(value = "orderItem", subgraph = "orderItem-details"),
+                @NamedAttributeNode(value = "ticketType", subgraph = "ticketType-details")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "orderItem-details",
+                        attributeNodes = {
+                                @NamedAttributeNode("order")
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "ticketType-details",
+                        attributeNodes = {
+                                @NamedAttributeNode("event")
+                        }
+                )
+        }
+)
 public class Ticket extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

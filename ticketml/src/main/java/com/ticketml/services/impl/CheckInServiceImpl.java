@@ -15,6 +15,7 @@ import com.ticketml.repository.EventRepository;
 import com.ticketml.repository.OrganizerMembershipRepository;
 import com.ticketml.repository.TicketRepository;
 import com.ticketml.repository.UserRepository;
+import com.ticketml.services.CheckInService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

@@ -12,6 +12,26 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(callSuper = true)
+@NamedEntityGraph(
+        name = "Order.withItemsAndEventDetails",
+        attributeNodes = {
+                @NamedAttributeNode(value = "orderItems", subgraph = "orderItems-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "orderItems-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "ticketType", subgraph = "ticketType-subgraph")
+                        }
+                ),
+                @NamedSubgraph(
+                        name = "ticketType-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("event")
+                        }
+                )
+        }
+)
 public class Order extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

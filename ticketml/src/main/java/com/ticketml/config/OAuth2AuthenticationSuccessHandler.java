@@ -35,7 +35,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String token = jwtService.generateToken(user);
 
-        // URL của frontend mà bạn muốn redirect về
         String targetUrl = "http://localhost:3000/oauth2/redirect";
 
         String redirectUrl = UriComponentsBuilder.fromUriString(targetUrl)

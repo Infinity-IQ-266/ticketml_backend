@@ -1,6 +1,6 @@
-package com.ticketml.common.enums;
+package com.ticketml.common.dto.order;
 
-import com.ticketml.common.dto.OrderItemRequestDTO;
+import com.ticketml.common.dto.orderItem.OrderItemRequestDTO;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 

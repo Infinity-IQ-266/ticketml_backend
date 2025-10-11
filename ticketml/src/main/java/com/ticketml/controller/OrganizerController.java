@@ -8,7 +8,7 @@ import com.ticketml.response.Response;
 import com.ticketml.services.EventService;
 import com.ticketml.services.OrganizationService;
 import com.ticketml.services.TicketTypeService;
-import com.ticketml.services.impl.CheckInService;
+import com.ticketml.services.CheckInService;
 import com.ticketml.util.SecurityUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -52,22 +52,26 @@ public class OrganizerController {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(eventService.createEventWithTickets(orgId, requestDTO, googleId));
     }
+
     @PatchMapping("/events/{eventId}")
     public Response updateEvent(@PathVariable Long eventId, @Valid @RequestBody EventUpdateRequestDTO requestDTO) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(eventService.updateEvent(eventId, requestDTO, googleId));
     }
+
     @PostMapping("/events/{eventId}/ticketTypes")
     @ResponseStatus(HttpStatus.CREATED)
     public Response addTicketTypeToEvent(@PathVariable Long eventId, @Valid @RequestBody TicketTypeRequestDTO requestDTO) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(eventService.addTicketTypeToEvent(eventId, requestDTO, googleId));
     }
+
     @PatchMapping("/ticketTypes/{ticketTypeId}")
     public Response updateTicketType(@PathVariable Long ticketTypeId, @Valid @RequestBody TicketTypeRequestDTO requestDTO) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(ticketTypeService.updateTicketType(ticketTypeId, requestDTO, googleId));
     }
+
     @PostMapping("/events/{eventId}/checkIn")
     public Response checkInTicket(@PathVariable Long eventId, @Valid @RequestBody CheckInRequestDTO requestDTO) {
         String googleId = SecurityUtil.getGoogleId();

@@ -1,14 +1,12 @@
 package com.ticketml.converter;
 
-import com.ticketml.common.dto.ticketType.TicketTypeRequestDTO;
-import com.ticketml.common.dto.ticketType.TicketTypeResponseDTO;
-import com.ticketml.common.entity.TicketType;
+import com.ticketml.common.dto.ticket.TicketResponseDTO;
+import com.ticketml.common.entity.Ticket;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 
 @Component("ticketConverter")
-public class TicketConverter extends Super2Converter<TicketTypeRequestDTO, TicketTypeResponseDTO, TicketType> {
-
+public class TicketConverter extends  SuperConverter<TicketResponseDTO, Ticket> {
 
     private final ModelMapper modelMapper;
 
@@ -16,22 +14,20 @@ public class TicketConverter extends Super2Converter<TicketTypeRequestDTO, Ticke
         this.modelMapper = modelMapper;
     }
 
-
     @Override
-    public TicketTypeResponseDTO convertToResponseDTO(TicketType entity) {
-        return modelMapper.map(entity, TicketTypeResponseDTO.class);
+    public TicketResponseDTO convertToDTO(Ticket entity) {
+        TicketResponseDTO response = modelMapper.map(entity, TicketResponseDTO.class);
+        response.setEventId(entity.getTicketType().getEvent().getId());
+        response.setEventName(entity.getTicketType().getEvent().getTitle());
+        response.setEventLocation(entity.getTicketType().getEvent().getLocation());
+        response.setEventStartDate(entity.getTicketType().getEvent().getStartDate());
+        response.setTicketTypeName(entity.getTicketType().getType());
+        response.setOrderId(entity.getOrderItem().getOrder().getId());
+        return response;
     }
 
     @Override
-    public TicketType convertRequestToEntity(TicketTypeRequestDTO dto) {
-        TicketType ticketType = modelMapper.map(dto, TicketType.class);
-        ticketType.setRemainingQuantity(dto.getTotalQuantity());
-        ticketType.setStatus(dto.getTicketTypeStatus());
-        return ticketType;
-    }
-
-    @Override
-    public TicketTypeRequestDTO convertEntityToRequest(TicketType request) {
-        return modelMapper.map(request, TicketTypeRequestDTO.class);
+    public Ticket convertToEntity(TicketResponseDTO dto) {
+        return modelMapper.map(dto, Ticket.class);
     }
 }

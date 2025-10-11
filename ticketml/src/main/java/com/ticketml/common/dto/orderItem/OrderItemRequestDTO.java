@@ -1,4 +1,4 @@
-package com.ticketml.common.dto;
+package com.ticketml.common.dto.orderItem;
 
 
 import jakarta.validation.constraints.Min;

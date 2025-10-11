@@ -1,6 +1,6 @@
 package com.ticketml.converter;
 
-import com.ticketml.common.dto.UserResponseDto;
+import com.ticketml.common.dto.user.UserResponseDto;
 import com.ticketml.common.entity.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;

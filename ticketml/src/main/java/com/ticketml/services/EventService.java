@@ -9,8 +9,11 @@ import java.util.List;
 
 public interface EventService {
     List<EventDetailResponseDTO> findByOrganizationId(Long organizationId, String googleId);
+
     EventDetailResponseDTO createEventWithTickets(Long organizationId, EventCreateRequestDTO requestDTO, String googleId);
+
     EventDetailResponseDTO updateEvent(Long eventId, EventUpdateRequestDTO requestDTO, String googleId);
+
     TicketTypeResponseDTO addTicketTypeToEvent(Long eventId, TicketTypeRequestDTO requestDTO, String googleId);
 
     Page<EventDetailResponseDTO> searchEvent(EventSearchRequestDto request);

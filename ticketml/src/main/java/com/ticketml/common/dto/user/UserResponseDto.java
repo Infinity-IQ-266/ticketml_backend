@@ -1,4 +1,4 @@
-package com.ticketml.common.dto;
+package com.ticketml.common.dto.user;
 
 import lombok.Data;
 

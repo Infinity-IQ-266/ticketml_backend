@@ -1,7 +1,6 @@
 package com.ticketml.controller;
 
-import com.ticketml.common.enums.OrderPaymentResponseDTO;
-import com.ticketml.common.enums.OrderRequestDTO;
+import com.ticketml.common.dto.order.OrderRequestDTO;
 import com.ticketml.response.Response;
 import com.ticketml.services.OrderService;
 import com.ticketml.util.SecurityUtil;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api/v1/orders")
-//@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
 public class OrderController {
 
     private final OrderService orderService;

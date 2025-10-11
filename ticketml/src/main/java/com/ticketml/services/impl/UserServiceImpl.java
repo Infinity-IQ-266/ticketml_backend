@@ -1,6 +1,6 @@
 package com.ticketml.services.impl;
 
-import com.ticketml.common.dto.UserResponseDto;
+import com.ticketml.common.dto.user.UserResponseDto;
 import com.ticketml.common.entity.User;
 import com.ticketml.common.enums.ErrorMessage;
 import com.ticketml.converter.UserConverter;

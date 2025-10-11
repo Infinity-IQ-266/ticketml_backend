@@ -1,14 +1,16 @@
 package com.ticketml.services.impl;
 
-import com.ticketml.common.dto.OrderItemRequestDTO;
+import com.ticketml.common.dto.orderItem.OrderItemRequestDTO;
+import com.ticketml.common.dto.order.OrderResponseDTO;
 import com.ticketml.common.entity.Order;
 import com.ticketml.common.entity.OrderItem;
 import com.ticketml.common.entity.TicketType;
 import com.ticketml.common.entity.User;
 import com.ticketml.common.enums.ErrorMessage;
 import com.ticketml.common.enums.OrderPaymentResponseDTO;
-import com.ticketml.common.enums.OrderRequestDTO;
+import com.ticketml.common.dto.order.OrderRequestDTO;
 import com.ticketml.common.enums.OrderStatus;
+import com.ticketml.converter.OrderConverter;
 import com.ticketml.exception.BadRequestException;
 import com.ticketml.exception.NotFoundException;
 import com.ticketml.repository.OrderItemRepository;
@@ -26,6 +28,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -35,6 +38,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final VnpayUtil vnpayUtil;
+    private final OrderConverter orderConverter;
 
     private final String tmnCode;
     private final String hashSecret;
@@ -46,7 +50,7 @@ public class OrderServiceImpl implements OrderService {
                             TicketTypeRepository ticketTypeRepository,
                             OrderRepository orderRepository,
                             OrderItemRepository orderItemRepository,
-                            VnpayUtil vnpayUtil,
+                            VnpayUtil vnpayUtil, OrderConverter orderConverter,
                             @Value("${vnpay.tmnCode}") String tmnCode,
                             @Value("${vnpay.hashSecret}") String hashSecret,
                             @Value("${vnpay.paymentUrl}") String paymentUrl,
@@ -57,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.vnpayUtil = vnpayUtil;
+        this.orderConverter = orderConverter;
         this.tmnCode = tmnCode;
         this.hashSecret = hashSecret;
         this.paymentUrl = paymentUrl;
@@ -163,5 +168,17 @@ public class OrderServiceImpl implements OrderService {
                 .totalPrice(totalPrice)
                 .paymentUrl(finalPaymentUrl)
                 .build();
+    }
+
+    @Override
+    public List<OrderResponseDTO> getMyOrderHistory(String googleId) {
+        User currentUser = userRepository.findByGoogleId(googleId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
+
+        List<Order> orders = orderRepository.findByUserOrderByCreatedAtDesc(currentUser);
+
+        return orders.stream()
+                .map(orderConverter::convertToDTO)
+                .collect(Collectors.toList());
     }
 }

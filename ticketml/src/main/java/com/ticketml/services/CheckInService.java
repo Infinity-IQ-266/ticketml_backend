@@ -1,4 +1,4 @@
-package com.ticketml.services.impl;
+package com.ticketml.services;
 
 import com.ticketml.common.dto.checkIn.CheckInRequestDTO;
 import com.ticketml.common.dto.checkIn.CheckInResponseDTO;

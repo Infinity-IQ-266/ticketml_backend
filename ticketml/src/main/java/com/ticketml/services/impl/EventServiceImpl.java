@@ -10,15 +10,12 @@ import com.ticketml.common.entity.User;
 import com.ticketml.common.enums.ErrorMessage;
 import com.ticketml.common.enums.OrganizerRole;
 import com.ticketml.converter.EventConverter;
-import com.ticketml.converter.TicketConverter;
+import com.ticketml.converter.TicketTypeConverter;
 import com.ticketml.exception.ForbiddenException;
 import com.ticketml.exception.NotFoundException;
 import com.ticketml.repository.*;
 import com.ticketml.services.EventService;
 import com.ticketml.specification.EventSpecification;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Positive;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,17 +34,17 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final EventConverter eventConverter;
     private final OrganizationRepository organizationRepository;
-    private final TicketConverter ticketConverter;
+    private final TicketTypeConverter ticketTypeConverter;
     private final TicketTypeRepository ticketTypeRepository;
     private final EventSpecification eventSpecification;
 
-    public EventServiceImpl(UserRepository userRepository, OrganizerMembershipRepository membershipRepository, EventRepository eventRepository, EventConverter eventConverter, OrganizationRepository organizationRepository, TicketConverter ticketConverter, TicketTypeRepository ticketTypeRepository, EventSpecification eventSpecification) {
+    public EventServiceImpl(UserRepository userRepository, OrganizerMembershipRepository membershipRepository, EventRepository eventRepository, EventConverter eventConverter, OrganizationRepository organizationRepository, TicketTypeConverter ticketTypeConverter, TicketTypeRepository ticketTypeRepository, EventSpecification eventSpecification) {
         this.userRepository = userRepository;
         this.membershipRepository = membershipRepository;
         this.eventRepository = eventRepository;
         this.eventConverter = eventConverter;
         this.organizationRepository = organizationRepository;
-        this.ticketConverter = ticketConverter;
+        this.ticketTypeConverter = ticketTypeConverter;
         this.ticketTypeRepository = ticketTypeRepository;
         this.eventSpecification = eventSpecification;
     }
@@ -71,8 +68,8 @@ public class EventServiceImpl implements EventService {
         User currentUser = userRepository.findByGoogleId(googleId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND, "User not found"));
 
-        if (!membershipRepository.existsByUserAndOrganizationIdAndRoleInOrg(currentUser, organizationId, OrganizerRole.OWNER)) {
-            throw new ForbiddenException(ErrorMessage.FORBIDDEN_AUTHORITY, "Only the OWNER can create events.");
+        if (!membershipRepository.existsByUserAndOrganizationId(currentUser, organizationId)) {
+            throw new ForbiddenException(ErrorMessage.FORBIDDEN_AUTHORITY, "You are not a member of this organization.");
         }
 
         Organization organization = organizationRepository.findById(organizationId)
@@ -83,7 +80,7 @@ public class EventServiceImpl implements EventService {
         event.setOrganization(organization);
 
         List<TicketType> ticketTypes = requestDTO.getTicketTypes().stream()
-                .map(ticketConverter::convertRequestToEntity)
+                .map(ticketTypeConverter::convertRequestToEntity)
                 .peek(ticketType -> ticketType.setEvent(event))
                 .collect(Collectors.toList());
 
@@ -130,10 +127,10 @@ public class EventServiceImpl implements EventService {
         if (!membershipRepository.existsByUserAndOrganizationIdAndRoleInOrg(currentUser, event.getOrganization().getId(), OrganizerRole.OWNER)) {
             throw new ForbiddenException(ErrorMessage.FORBIDDEN_AUTHORITY, "Only the OWNER can add ticket types.");
         }
-        TicketType ticketType = ticketConverter.convertRequestToEntity(requestDTO);
+        TicketType ticketType = ticketTypeConverter.convertRequestToEntity(requestDTO);
         ticketType.setEvent(event);
         ticketTypeRepository.save(ticketType);
-        return ticketConverter.convertToResponseDTO(ticketType);
+        return ticketTypeConverter.convertToResponseDTO(ticketType);
     }
 
     @Override
