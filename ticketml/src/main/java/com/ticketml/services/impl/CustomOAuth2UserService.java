@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 public class CustomOAuth2UserService extends OidcUserService {
@@ -30,7 +30,7 @@ public class CustomOAuth2UserService extends OidcUserService {
         String name = oidcUser.getAttribute("name");
         String googleId = oidcUser.getAttribute("sub");
         String picture = oidcUser.getAttribute("picture");
-        LocalDateTime createdDate = LocalDateTime.now();
+        LocalDate createdDate = LocalDate.now();
 
         User user = userRepository.findByGoogleId(googleId)
                 .orElse(new User());

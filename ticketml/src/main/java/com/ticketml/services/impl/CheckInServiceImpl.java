@@ -18,7 +18,7 @@ import com.ticketml.repository.UserRepository;
 import com.ticketml.services.CheckInService;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
@@ -60,7 +60,7 @@ public class CheckInServiceImpl implements CheckInService {
         }
 
         ticket.setCheckedIn(true);
-        ticket.setUpdatedAt(LocalDateTime.now());
+        ticket.setUpdatedAt(LocalDate.now());
         ticket.setStatus(TicketStatus.USED);
         ticketRepository.save(ticket);
 

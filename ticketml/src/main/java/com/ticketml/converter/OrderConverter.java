@@ -22,7 +22,7 @@ public class OrderConverter extends SuperConverter<OrderResponseDTO, Order> {
     @Override
     public OrderResponseDTO convertToDTO(Order entity) {
         OrderResponseDTO response = modelMapper.map(entity, OrderResponseDTO.class);
-        response.setCreatedAt(entity.getCreatedAt().toLocalDate());
+        response.setCreatedAt(entity.getCreatedAt());
         OrderItemHistoryDTO orderItemDto = null;
         List<OrderItemHistoryDTO> itemDTOs = entity.getOrderItems().stream()
                 .map(orderItemConverter::convertToDTO)

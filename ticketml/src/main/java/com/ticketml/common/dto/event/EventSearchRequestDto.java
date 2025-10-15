@@ -1,12 +1,10 @@
 package com.ticketml.common.dto.event;
 
-import com.ticketml.common.entity.Organization;
 import com.ticketml.common.enums.DirectionEnum;
 import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Builder
