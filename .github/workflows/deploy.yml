@@ -20,6 +20,7 @@ jobs:
           distribution: "temurin"
 
       - name: Build with Maven
+        working-directory: ./ticketml
         run: mvn clean package -DskipTests
 
       - name: Copy JAR to EC2
