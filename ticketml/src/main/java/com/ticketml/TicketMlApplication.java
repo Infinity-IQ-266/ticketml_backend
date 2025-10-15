@@ -11,7 +11,7 @@ public class TicketMlApplication {
 
 	@PostConstruct
 	public void init() {
-		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Saigon"));
+			TimeZone.setDefault(TimeZone.getTimeZone("Asia/Saigon"));
 	}
 
 	public static void main(String[] args) {

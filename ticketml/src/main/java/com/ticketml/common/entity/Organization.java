@@ -9,7 +9,6 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "organizations")
 @EqualsAndHashCode(callSuper = true)
 public class Organization extends Auditable {
