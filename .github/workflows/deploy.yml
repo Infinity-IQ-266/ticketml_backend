@@ -28,19 +28,18 @@ jobs:
         working-directory: ./ticketml
         run: mvn clean package -DskipTests
 
-      - name: Verify JAR checksum on Runner
-        run: sha256sum ticketml/target/ticketml-0.0.1-SNAPSHOT.jar
+      # Không cần bước Verify nữa cho gọn
 
       - name: Copy JAR to EC2
         uses: appleboy/scp-action@master
+        working-directory: ./ticketml/target # DI CHUYỂN VÀO THƯ MỤC TARGET
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
-          source: "ticketml/target/ticketml-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/app/"
-          rename: "ticketml-0.0.1-SNAPSHOT.jar"
+          source: "ticketml-0.0.1-SNAPSHOT.jar" # CHỈ COPY FILE
+          target: "/home/ec2-user/app/" # ĐẾN THƯ MỤC APP
 
       - name: Execute deployment script on EC2
         uses: appleboy/ssh-action@master
@@ -50,5 +49,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            chmod +x /home/ec2-user/app/deploy.sh
+            # Không cần chmod nữa vì nó chỉ cần chạy 1 lần
             /home/ec2-user/app/deploy.sh
