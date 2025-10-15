@@ -34,6 +34,7 @@ public class EventSpecification {
             if (startDate == null) {
                 return null;
             }
+            System.out.println("1");
             return cb.greaterThanOrEqualTo(root.get("startDate"), startDate);
         };
     }
