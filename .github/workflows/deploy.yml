@@ -36,7 +36,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           port: 22
           source: "ticketml/target/ticketml-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/app/"
+          target: "/home/ec2-user/"
 
       - name: Execute deployment script on EC2
         uses: appleboy/ssh-action@master
