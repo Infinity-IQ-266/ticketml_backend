@@ -75,6 +75,19 @@ public class OrderServiceImpl implements OrderService {
         User currentUser = userRepository.findByGoogleId(googleId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND));
 
+        if (requestDTO.getFullName() != null) {
+            currentUser.setFullName(requestDTO.getFullName());
+        }
+
+        if (requestDTO.getEmail() != null) {
+            currentUser.setEmail(requestDTO.getEmail());
+        }
+
+        if (requestDTO.getPhoneNumber() != null) {
+            currentUser.setPhoneNumber(requestDTO.getPhoneNumber());
+        }
+
+
         double totalPrice = 0;
 
         List<OrderItem> orderItems = new ArrayList<>();
@@ -105,6 +118,7 @@ public class OrderServiceImpl implements OrderService {
         for (OrderItem item : orderItems) {
             item.setOrder(savedOrder);
         }
+        userRepository.save(currentUser);
         orderItemRepository.saveAll(orderItems);
 
         // VNPAY

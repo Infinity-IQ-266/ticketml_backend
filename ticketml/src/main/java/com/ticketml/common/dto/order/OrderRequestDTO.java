@@ -8,6 +8,13 @@ import java.util.List;
 
 @Data
 public class OrderRequestDTO {
+
+    private String fullName;
+
+    private String email;
+
+    private String phoneNumber;
+
     @NotEmpty
     private List<OrderItemRequestDTO> items;
 }

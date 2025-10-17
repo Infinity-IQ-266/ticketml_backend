@@ -66,7 +66,7 @@ public class CheckInServiceImpl implements CheckInService {
 
         TicketDetailResponseDTO responseDTO = new  TicketDetailResponseDTO();
 
-        String fullName = ticket.getOrderItem().getOrder().getUser().getFirstName() + " " + ticket.getOrderItem().getOrder().getUser().getLastName();
+        String fullName = ticket.getOrderItem().getOrder().getUser().getFullName();
         responseDTO.setUserName(fullName);
         responseDTO.setTicketType(ticket.getTicketType().getType());
         responseDTO.setCheckInTime(ticket.getUpdatedAt());

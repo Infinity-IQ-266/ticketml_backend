@@ -37,7 +37,7 @@ public class CustomOAuth2UserService extends OidcUserService {
 
         user.setEmail(email);
         user.setGoogleId(googleId);
-        user.setFirstName(name);
+        user.setFullName(name);
         user.setImageUrl(picture);
         if (user.getRole() == null) {
             user.setRole(Role.USER);
