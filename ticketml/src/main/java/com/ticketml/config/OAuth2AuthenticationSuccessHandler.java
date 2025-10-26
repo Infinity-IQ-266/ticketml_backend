@@ -35,7 +35,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String token = jwtService.generateToken(user);
 
-        String targetUrl = "https://ticketml.vercel.app/oauth2/redirect";
+        String targetUrl = "https://ticketml.dpdns.org/oauth2/redirect";
 
         String redirectUrl = UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", token)
