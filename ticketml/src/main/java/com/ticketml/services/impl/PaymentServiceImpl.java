@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.*;
 
 @Service
@@ -31,6 +32,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final OrderRepository orderRepository;
     private final TicketRepository ticketRepository;
     private final TicketTypeRepository ticketTypeRepository;
+    private static final String ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     private final String hashSecret;
 
@@ -129,7 +132,7 @@ public class PaymentServiceImpl implements PaymentService {
                         Ticket ticket = new Ticket();
                         ticket.setOrderItem(item);
                         ticket.setTicketType(item.getTicketType());
-                        ticket.setQrCode(UUID.randomUUID().toString());
+                        ticket.setQrCode(generateTicketCode());
                         ticket.setCheckedIn(false);
                         ticket.setStatus(TicketStatus.ACTIVE);
                         ticketRepository.save(ticket);
@@ -156,4 +159,13 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return response;
     }
+
+    public static String generateTicketCode() {
+        StringBuilder sb = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            sb.append(ALPHABET.charAt(RANDOM.nextInt(ALPHABET.length())));
+        }
+        return "TML-" + sb.toString();
+    }
+
 }
