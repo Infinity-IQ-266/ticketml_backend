@@ -1,10 +1,14 @@
 package com.ticketml.services;
 
 
-import com.ticketml.common.dto.organization.OrganizationRequestDto;
+import com.ticketml.common.dto.organization.OrganizationRequestDTO;
+import com.ticketml.common.dto.organization.OrganizationResponseDto;
 
 import java.util.List;
 
 public interface OrganizationService {
-    List<OrganizationRequestDto>  findOrganizationsByCurrentUser(String googleId);
+    List<OrganizationResponseDto>  findOrganizationsByCurrentUser(String googleId);
+
+    OrganizationResponseDto createOrganization(String googleId, OrganizationRequestDTO request);
+    OrganizationResponseDto updateOrganization(Long orgId, String googleId, OrganizationRequestDTO request);
 }

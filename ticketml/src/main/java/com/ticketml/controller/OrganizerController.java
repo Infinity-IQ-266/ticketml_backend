@@ -3,6 +3,7 @@ package com.ticketml.controller;
 import com.ticketml.common.dto.checkIn.CheckInRequestDTO;
 import com.ticketml.common.dto.event.EventCreateRequestDTO;
 import com.ticketml.common.dto.event.EventUpdateRequestDTO;
+import com.ticketml.common.dto.organization.OrganizationRequestDTO;
 import com.ticketml.common.dto.ticketType.TicketTypeRequestDTO;
 import com.ticketml.response.Response;
 import com.ticketml.services.EventService;
@@ -12,6 +13,7 @@ import com.ticketml.services.CheckInService;
 import com.ticketml.util.SecurityUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,20 @@ public class OrganizerController {
     public Response getMyOrganizations() {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(organizationService.findOrganizationsByCurrentUser(googleId));
+    }
+
+    @PostMapping(value = "/organizations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response createOrganization(@ModelAttribute OrganizationRequestDTO request) {
+        String googleId = SecurityUtil.getGoogleId();
+        return new Response(organizationService.createOrganization(googleId, request));
+    }
+
+    @PutMapping(value = "/organizations/{orgId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response updateOrganization(
+            @PathVariable Long orgId,
+            @ModelAttribute OrganizationRequestDTO request) {
+        String googleId = SecurityUtil.getGoogleId();
+        return new Response(organizationService.updateOrganization(orgId, googleId, request));
     }
 
     @GetMapping("/organizations/{orgId}/events")

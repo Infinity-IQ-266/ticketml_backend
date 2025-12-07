@@ -1,5 +1,6 @@
 package com.ticketml.common.entity;
 
+import com.ticketml.common.enums.OrganizationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.HashSet;
@@ -17,9 +18,19 @@ public class Organization extends Auditable {
     private Long id;
 
     private String name;
+
     private String description;
+
     private String address;
+
     private String logoUrl;
+
+    private String email;
+
+    private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private OrganizationStatus status;
 
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrganizerMembership> memberships = new HashSet<>();

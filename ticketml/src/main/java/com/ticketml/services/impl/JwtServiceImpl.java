@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24;
+    private static final long EXPIRATION_TIME_MS = 1000 * 60 * 60 * 24 * 1000;
 
     private final SecretKey key;
 
