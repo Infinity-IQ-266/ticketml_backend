@@ -4,6 +4,7 @@ import com.ticketml.common.dto.chat.ChatRequestDTO;
 import com.ticketml.common.dto.chat.ChatResponseDTO;
 import com.ticketml.response.Response;
 import com.ticketml.services.GeminiService;
+import com.ticketml.util.SecurityUtil;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +23,8 @@ public class ChatController {
 
     @PostMapping
     public Response handleChatMessage(@Valid @RequestBody ChatRequestDTO request) {
-        String reply = geminiService.generateContent(request.getMessage());
+        String googleId = SecurityUtil.getGoogleId();
+        String reply = geminiService.generateContent(request.getMessage(), googleId);
         return new Response(new ChatResponseDTO(reply));
     }
 }

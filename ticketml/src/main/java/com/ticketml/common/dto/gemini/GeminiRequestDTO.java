@@ -8,4 +8,5 @@ import java.util.List;
 @AllArgsConstructor
 public class GeminiRequestDTO {
     private List<ContentDTO> contents;
+    private List<ToolDTO> tools;
 }
