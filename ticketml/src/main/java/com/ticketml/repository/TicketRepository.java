@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,4 +19,8 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     @EntityGraph(value = "Ticket.withDetails")
     @Query("SELECT t FROM Ticket t JOIN t.orderItem oi JOIN oi.order o WHERE o.user.id = :userId AND t.status = :status")
     List<Ticket> findTicketsByUserAndStatus(Long userId, TicketStatus status);
+
+    @Query("SELECT COUNT(t) FROM Ticket t JOIN t.ticketType tt JOIN tt.event e " +
+            "WHERE e.organization.id = :orgId AND t.status = 'ACTIVE'")
+    Long countTicketsSoldByOrganizationId(@Param("orgId") Long orgId);
 }

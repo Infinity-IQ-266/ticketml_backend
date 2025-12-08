@@ -13,7 +13,9 @@ public enum ErrorMessage {
     ORGANIZATION_NOT_FOUND(404,1007 ,"Organization not found" ),
     EVENT_NOT_FOUND(404, 1008, "Event not found"),
     TICKET_TYPE_NOT_FOUND(404, 1009, "Ticket type not found"),
-    QUANTITY_NOT_ENOUGH(400, 1010, "Quantity not enough");
+    QUANTITY_NOT_ENOUGH(400, 1010, "Quantity not enough"),
+    BAD_REQUEST(400,1011 ,"Bad request" ),
+    MEMBER_NOT_FOUND(404,1012 ,"Member not found" );
 
     private final int httpStatus;
     private final int code;

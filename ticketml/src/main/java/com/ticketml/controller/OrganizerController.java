@@ -3,25 +3,24 @@ package com.ticketml.controller;
 import com.ticketml.common.dto.checkIn.CheckInRequestDTO;
 import com.ticketml.common.dto.event.EventCreateRequestDTO;
 import com.ticketml.common.dto.event.EventUpdateRequestDTO;
+import com.ticketml.common.dto.organization.MemberRequestDTO;
 import com.ticketml.common.dto.organization.OrganizationRequestDTO;
 import com.ticketml.common.dto.ticketType.TicketTypeRequestDTO;
 import com.ticketml.response.Response;
-import com.ticketml.services.EventService;
-import com.ticketml.services.OrganizationService;
-import com.ticketml.services.TicketTypeService;
-import com.ticketml.services.CheckInService;
+import com.ticketml.services.*;
 import com.ticketml.util.SecurityUtil;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
 @RequestMapping("api/v1/organizer")
-@PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
+@PreAuthorize("isAuthenticated()")
 @Validated
 public class OrganizerController {
     private final OrganizationService organizationService;
@@ -29,7 +28,10 @@ public class OrganizerController {
     private final TicketTypeService ticketTypeService;
     private final CheckInService checkInService;
 
-    public OrganizerController(OrganizationService organizationService, EventService eventService, TicketTypeService ticketTypeService, CheckInService checkInService) {
+    public OrganizerController(OrganizationService organizationService,
+                               EventService eventService,
+                               TicketTypeService ticketTypeService,
+                               CheckInService checkInService) {
         this.organizationService = organizationService;
         this.eventService = eventService;
         this.ticketTypeService = ticketTypeService;
@@ -43,7 +45,7 @@ public class OrganizerController {
     }
 
     @PostMapping(value = "/organizations", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Response createOrganization(@ModelAttribute OrganizationRequestDTO request) {
+    public Response createOrganization(@ModelAttribute @Valid OrganizationRequestDTO request) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(organizationService.createOrganization(googleId, request));
     }
@@ -51,9 +53,45 @@ public class OrganizerController {
     @PutMapping(value = "/organizations/{orgId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Response updateOrganization(
             @PathVariable Long orgId,
-            @ModelAttribute OrganizationRequestDTO request) {
+            @ModelAttribute @Valid OrganizationRequestDTO request) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(organizationService.updateOrganization(orgId, googleId, request));
+    }
+
+    @GetMapping("/organizations/{orgId}/members")
+    public Response getMembers(@PathVariable Long orgId) {
+        String googleId = SecurityUtil.getGoogleId();
+        return new Response(organizationService.getMembers(orgId, googleId));
+    }
+
+    @PostMapping("/organizations/{orgId}/members")
+    public Response addMember(@PathVariable Long orgId, @Valid @RequestBody MemberRequestDTO request) {
+        String googleId = SecurityUtil.getGoogleId();
+        organizationService.addMember(orgId, googleId, request);
+        return new Response("Member added successfully");
+    }
+
+    @DeleteMapping("/organizations/{orgId}/members/{userId}")
+    public Response removeMember(@PathVariable Long orgId, @PathVariable Long userId) {
+        String googleId = SecurityUtil.getGoogleId();
+        organizationService.removeMember(orgId, userId, googleId);
+        return new Response("Member removed successfully");
+    }
+
+    @GetMapping("/organizations/{orgId}/orders")
+    public Response getOrders(
+            @PathVariable Long orgId,
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @RequestParam(name = "size", defaultValue = "20") int size) {
+        String googleId = SecurityUtil.getGoogleId();
+        Pageable pageable = PageRequest.of(page, size);
+        return new Response(organizationService.getOrganizationOrders(orgId, googleId, pageable));
+    }
+
+    @GetMapping("/organizations/{orgId}/dashboard")
+    public Response getDashboard(@PathVariable Long orgId) {
+        String googleId = SecurityUtil.getGoogleId();
+        return new Response(organizationService.getDashboardStats(orgId, googleId));
     }
 
     @GetMapping("/organizations/{orgId}/events")
