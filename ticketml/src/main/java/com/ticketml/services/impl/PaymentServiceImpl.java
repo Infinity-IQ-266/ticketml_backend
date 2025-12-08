@@ -9,6 +9,7 @@ import com.ticketml.common.enums.TicketStatus;
 import com.ticketml.repository.OrderRepository;
 import com.ticketml.repository.TicketRepository;
 import com.ticketml.repository.TicketTypeRepository;
+import com.ticketml.services.EmailService;
 import com.ticketml.services.PaymentService;
 import com.ticketml.util.VnpayUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,13 +35,15 @@ public class PaymentServiceImpl implements PaymentService {
     private final TicketTypeRepository ticketTypeRepository;
     private static final String ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
     private static final SecureRandom RANDOM = new SecureRandom();
+    private final EmailService emailService;
 
     private final String hashSecret;
 
-    public PaymentServiceImpl(OrderRepository orderRepository, TicketRepository ticketRepository, TicketTypeRepository ticketTypeRepository, @Value("${vnpay.hashSecret}") String hashSecret) {
+    public PaymentServiceImpl(OrderRepository orderRepository, TicketRepository ticketRepository, TicketTypeRepository ticketTypeRepository, EmailService emailService, @Value("${vnpay.hashSecret}") String hashSecret) {
         this.orderRepository = orderRepository;
         this.ticketRepository = ticketRepository;
         this.ticketTypeRepository = ticketTypeRepository;
+        this.emailService = emailService;
         this.hashSecret = hashSecret;
     }
 
@@ -126,7 +129,7 @@ public class PaymentServiceImpl implements PaymentService {
             if ("00".equals(vnp_ResponseCode)) {
                 logger.info("IPN Success: Payment successful for Order ID: {}", orderId);
                 order.setStatus(OrderStatus.CONFIRMED);
-
+                List<Ticket> generatedTickets = new ArrayList<>();
                 for (OrderItem item : order.getOrderItems()) {
                     for (int i = 0; i < item.getQuantity(); i++) {
                         Ticket ticket = new Ticket();
@@ -136,12 +139,15 @@ public class PaymentServiceImpl implements PaymentService {
                         ticket.setCheckedIn(false);
                         ticket.setStatus(TicketStatus.ACTIVE);
                         ticketRepository.save(ticket);
+                        generatedTickets.add(ticket);
                     }
 
                     TicketType ticketType = item.getTicketType();
                     int newRemainingQuantity = ticketType.getRemainingQuantity() - item.getQuantity();
                     ticketType.setRemainingQuantity(newRemainingQuantity);
                     ticketTypeRepository.save(ticketType);
+                    String recipientEmail = order.getUser().getEmail();
+                    emailService.sendTicketEmail(recipientEmail, order, generatedTickets);
                 }
             } else {
                 logger.warn("IPN Failed: Payment failed for Order ID: {}. ResponseCode: {}", orderId, vnp_ResponseCode);
