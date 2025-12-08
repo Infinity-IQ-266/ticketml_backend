@@ -20,7 +20,7 @@ public class Event extends Auditable {
 
     private String title;
 
-    @Column(length = 1000)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private LocalDate startDate;
