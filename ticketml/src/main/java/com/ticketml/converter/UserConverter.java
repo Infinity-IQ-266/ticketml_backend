@@ -17,7 +17,9 @@ public class UserConverter extends SuperConverter<UserResponseDto, User> {
 
     @Override
     public UserResponseDto convertToDTO(User entity) {
-        return modelMapper.map(entity, UserResponseDto.class);
+        UserResponseDto dto = modelMapper.map(entity, UserResponseDto.class);
+        dto.setRole(entity.getRole().name());
+        return dto;
     }
 
     @Override
