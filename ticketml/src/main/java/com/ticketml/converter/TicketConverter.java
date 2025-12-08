@@ -23,6 +23,7 @@ public class TicketConverter extends  SuperConverter<TicketResponseDTO, Ticket> 
         response.setEventStartDate(entity.getTicketType().getEvent().getStartDate());
         response.setTicketTypeName(entity.getTicketType().getType());
         response.setOrderId(entity.getOrderItem().getOrder().getId());
+        response.setTicketStatus(entity.getStatus());
         return response;
     }
 

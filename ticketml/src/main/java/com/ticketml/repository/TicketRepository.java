@@ -1,6 +1,7 @@
 package com.ticketml.repository;
 
 import com.ticketml.common.entity.Ticket;
+import com.ticketml.common.entity.User;
 import com.ticketml.common.enums.TicketStatus;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -20,7 +21,16 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
     @Query("SELECT t FROM Ticket t JOIN t.orderItem oi JOIN oi.order o WHERE o.user.id = :userId AND t.status = :status")
     List<Ticket> findTicketsByUserAndStatus(Long userId, TicketStatus status);
 
-    @Query("SELECT COUNT(t) FROM Ticket t JOIN t.ticketType tt JOIN tt.event e " +
-            "WHERE e.organization.id = :orgId AND t.status = 'ACTIVE'")
+    @Query("SELECT COUNT(t) FROM Ticket t JOIN t.ticketType tt JOIN tt.event e " + "WHERE e.organization.id = :orgId AND t.status = 'ACTIVE'")
     Long countTicketsSoldByOrganizationId(@Param("orgId") Long orgId);
+
+    @EntityGraph(value = "Ticket.withDetails")
+    @Query("""
+                SELECT t FROM Ticket t
+                JOIN t.orderItem oi
+                JOIN oi.order o
+                WHERE o.user = :user
+            """)
+    List<Ticket> findTicketsByUser(@Param("user") User user);
+
 }

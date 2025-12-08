@@ -35,7 +35,12 @@ public class TicketServiceImpl implements TicketService {
 
         List<Ticket> tickets;
 
-        tickets = ticketRepository.findTicketsByUserAndStatus(currentUser.getId(), status);
+        if (status != null) {
+            tickets = ticketRepository.findTicketsByUserAndStatus(currentUser.getId(), status);
+
+        }
+
+        tickets = ticketRepository.findTicketsByUser(currentUser);
 
         return tickets.stream()
                 .map(ticketConverter::convertToDTO)

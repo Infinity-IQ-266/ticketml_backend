@@ -1,5 +1,6 @@
 package com.ticketml.common.dto.ticket;
 
+import com.ticketml.common.enums.TicketStatus;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -16,6 +17,8 @@ public class TicketResponseDTO {
     private LocalDate eventStartDate;
 
     private String ticketTypeName;
+
+    private TicketStatus ticketStatus;
 
     private Long orderId;
 }
