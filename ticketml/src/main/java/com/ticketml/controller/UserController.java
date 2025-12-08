@@ -44,7 +44,7 @@ public class UserController {
 
     @GetMapping("/me/tickets")
     public Response getTickets(
-            @RequestParam(name = "status", required = false, defaultValue = "ACTIVE") TicketStatus status
+            @RequestParam(name = "status", required = false) TicketStatus status
     ) {
         String googleId = SecurityUtil.getGoogleId();
         return new Response(ticketService.getMyTickets(googleId, status));
