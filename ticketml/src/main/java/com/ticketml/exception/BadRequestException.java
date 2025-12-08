@@ -10,6 +10,9 @@ public class BadRequestException extends GenericException {
     public BadRequestException(ErrorMessage error, String message) {
         super(error.getCode(), message, error.getHttpStatus());
     }
+    public BadRequestException(String message) {
+        super(message);
+    }
 
 }
 

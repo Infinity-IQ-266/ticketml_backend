@@ -17,7 +17,9 @@ public class OrganizationConverter extends SuperConverter<OrganizationResponseDt
 
     @Override
     public OrganizationResponseDto convertToDTO(Organization entity) {
-        return modelMapper.map(entity, OrganizationResponseDto.class);
+        OrganizationResponseDto dto = modelMapper.map(entity, OrganizationResponseDto.class);
+        dto.setOrganizationId(entity.getId());
+        return dto;
     }
 
     @Override
