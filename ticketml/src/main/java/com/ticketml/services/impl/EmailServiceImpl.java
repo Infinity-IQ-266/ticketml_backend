@@ -52,7 +52,7 @@ public class EmailServiceImpl implements EmailService {
             String eventName = tickets.get(0).getTicketType().getEvent().getTitle();
             String location = tickets.get(0).getTicketType().getEvent().getLocation();
             String time = tickets.get(0).getTicketType().getEvent().getStartDate()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm", new Locale("vi", "VN")));
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("vi", "VN")));
 
             StringBuilder htmlContent = new StringBuilder();
             htmlContent.append("<!DOCTYPE html>");
