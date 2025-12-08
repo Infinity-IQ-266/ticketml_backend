@@ -100,15 +100,21 @@ public class OrganizerController {
         return new Response(eventService.findByOrganizationId(orgId, googleId));
     }
 
-    @PostMapping("/organizations/{orgId}/events")
+    @PostMapping(value = "/organizations/{orgId}/events", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Response createEvent(@PathVariable Long orgId, @Valid @RequestBody EventCreateRequestDTO requestDTO) {
+    public Response createEvent(
+            @PathVariable Long orgId,
+            @ModelAttribute @Valid EventCreateRequestDTO requestDTO) {
+
         String googleId = SecurityUtil.getGoogleId();
         return new Response(eventService.createEventWithTickets(orgId, requestDTO, googleId));
     }
 
-    @PatchMapping("/events/{eventId}")
-    public Response updateEvent(@PathVariable Long eventId, @Valid @RequestBody EventUpdateRequestDTO requestDTO) {
+    @PatchMapping(value = "/events/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Response updateEvent(
+            @PathVariable Long eventId,
+            @ModelAttribute @Valid EventUpdateRequestDTO requestDTO) {
+
         String googleId = SecurityUtil.getGoogleId();
         return new Response(eventService.updateEvent(eventId, requestDTO, googleId));
     }

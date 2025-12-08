@@ -19,11 +19,17 @@ public class Event extends Auditable {
     private Long id;
 
     private String title;
+
     @Column(length = 1000)
     private String description;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
+
     private String location;
+
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)

@@ -15,6 +15,7 @@ import com.ticketml.exception.ForbiddenException;
 import com.ticketml.exception.NotFoundException;
 import com.ticketml.repository.*;
 import com.ticketml.services.EventService;
+import com.ticketml.services.S3Service;
 import com.ticketml.specification.EventSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,8 +38,9 @@ public class EventServiceImpl implements EventService {
     private final TicketTypeConverter ticketTypeConverter;
     private final TicketTypeRepository ticketTypeRepository;
     private final EventSpecification eventSpecification;
+    private final S3Service s3Service;
 
-    public EventServiceImpl(UserRepository userRepository, OrganizerMembershipRepository membershipRepository, EventRepository eventRepository, EventConverter eventConverter, OrganizationRepository organizationRepository, TicketTypeConverter ticketTypeConverter, TicketTypeRepository ticketTypeRepository, EventSpecification eventSpecification) {
+    public EventServiceImpl(UserRepository userRepository, OrganizerMembershipRepository membershipRepository, EventRepository eventRepository, EventConverter eventConverter, OrganizationRepository organizationRepository, TicketTypeConverter ticketTypeConverter, TicketTypeRepository ticketTypeRepository, EventSpecification eventSpecification, S3Service s3Service) {
         this.userRepository = userRepository;
         this.membershipRepository = membershipRepository;
         this.eventRepository = eventRepository;
@@ -47,6 +49,7 @@ public class EventServiceImpl implements EventService {
         this.ticketTypeConverter = ticketTypeConverter;
         this.ticketTypeRepository = ticketTypeRepository;
         this.eventSpecification = eventSpecification;
+        this.s3Service = s3Service;
     }
 
     @Override
@@ -78,6 +81,11 @@ public class EventServiceImpl implements EventService {
         Event event = eventConverter.convertRequestToEntity(requestDTO);
 
         event.setOrganization(organization);
+
+        if (requestDTO.getBannerImage() != null && !requestDTO.getBannerImage().isEmpty()) {
+            String imageUrl = s3Service.uploadFile(requestDTO.getBannerImage());
+            event.setImageUrl(imageUrl);
+        }
 
         List<TicketType> ticketTypes = requestDTO.getTicketTypes().stream()
                 .map(ticketTypeConverter::convertRequestToEntity)
@@ -114,6 +122,10 @@ public class EventServiceImpl implements EventService {
         }
         if (requestDTO.getEndDate() != null) {
             event.setEndDate(requestDTO.getEndDate());
+        }
+        if (requestDTO.getBannerImage() != null && !requestDTO.getBannerImage().isEmpty()) {
+            String imageUrl = s3Service.uploadFile(requestDTO.getBannerImage());
+            event.setImageUrl(imageUrl);
         }
         eventRepository.save(event);
         return eventConverter.convertToResponseDTO(event);

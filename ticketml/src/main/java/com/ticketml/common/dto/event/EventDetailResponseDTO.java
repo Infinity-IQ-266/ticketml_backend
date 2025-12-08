@@ -9,13 +9,22 @@ import java.util.List;
 @Data
 public class EventDetailResponseDTO {
     private Long id;
+
     private String title;
+
     private String description;
+
     private LocalDate startDate;
+
     private LocalDate endDate;
+
     private String location;
+
     private Long organizationId;
+
     private String organizationName;
+
+    private String imageUrl;
 
     private List<TicketTypeResponseDTO> ticketTypes;
 }

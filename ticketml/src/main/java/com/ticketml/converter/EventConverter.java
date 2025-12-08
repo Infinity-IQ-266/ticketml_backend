@@ -21,6 +21,7 @@ public class EventConverter extends Super2Converter<EventCreateRequestDTO, Event
         EventDetailResponseDTO eventDetailResponseDTO =  modelMapper.map(entity, EventDetailResponseDTO.class);
         eventDetailResponseDTO.setOrganizationId(entity.getOrganization().getId());
         eventDetailResponseDTO.setOrganizationName(entity.getOrganization().getName());
+        eventDetailResponseDTO.setImageUrl(entity.getImageUrl());
         return eventDetailResponseDTO;
     }
 
