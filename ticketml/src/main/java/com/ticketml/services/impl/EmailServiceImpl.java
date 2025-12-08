@@ -90,7 +90,7 @@ public class EmailServiceImpl implements EmailService {
 
             // Header
             htmlContent.append("<div class='header'>");
-            htmlContent.append("<h1>🎫 TicketML</h1>");
+            htmlContent.append("<h1>TicketML</h1>");
             htmlContent.append("<p>Vé điện tử của bạn đã sẵn sàng!</p>");
             htmlContent.append("</div>");
 
@@ -101,9 +101,9 @@ public class EmailServiceImpl implements EmailService {
 
             // Event Info
             htmlContent.append("<div class='event-info'>");
-            htmlContent.append("<p><strong>🎭 Sự kiện:</strong> ").append(eventName).append("</p>");
-            htmlContent.append("<p><strong>📅 Thời gian:</strong> ").append(time).append("</p>");
-            htmlContent.append("<p><strong>📍 Địa điểm:</strong> ").append(location).append("</p>");
+            htmlContent.append("<p><strong>Sự kiện:</strong> ").append(eventName).append("</p>");
+            htmlContent.append("<p><strong>Thời gian:</strong> ").append(time).append("</p>");
+            htmlContent.append("<p><strong>Địa điểm:</strong> ").append(location).append("</p>");
             htmlContent.append("</div>");
 
             htmlContent.append("<div class='divider'></div>");
@@ -128,7 +128,7 @@ public class EmailServiceImpl implements EmailService {
 
             // Footer
             htmlContent.append("<div class='footer'>");
-            htmlContent.append("<strong>📱 Lưu ý quan trọng</strong><br/>");
+            htmlContent.append("<strong>Lưu ý quan trọng</strong><br/>");
             htmlContent.append("Vui lòng xuất trình mã QR này tại quầy soát vé khi tham dự sự kiện.<br/>");
             htmlContent.append("Mỗi mã QR chỉ được sử dụng một lần.<br/><br/>");
             htmlContent.append("<em>Cảm ơn bạn đã tin tưởng TicketML!</em>");
