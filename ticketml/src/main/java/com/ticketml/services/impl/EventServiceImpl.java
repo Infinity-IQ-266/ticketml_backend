@@ -53,6 +53,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<EventDetailResponseDTO> findByOrganizationId(Long organizationId, String googleId) {
         User currentUser = userRepository.findByGoogleId(googleId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessage.USER_NOT_FOUND, "User not found"));
