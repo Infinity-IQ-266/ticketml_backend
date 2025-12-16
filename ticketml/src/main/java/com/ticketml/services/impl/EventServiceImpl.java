@@ -146,6 +146,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Page<EventDetailResponseDTO> searchEvent(EventSearchRequestDto request) {
         Specification<Event> spec = EventSpecification.hasTitleLike(request.getTitle())
                 .and(EventSpecification.hasLocationLike(request.getLocation()))

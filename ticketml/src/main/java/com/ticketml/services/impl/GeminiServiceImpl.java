@@ -63,6 +63,7 @@ public class GeminiServiceImpl implements GeminiService {
         }
 
         ContentDTO userContent = new ContentDTO("user", Collections.singletonList(new PartDTO(userMessage)));
+
         history.add(userContent);
 
         GeminiResponseDTO response = callGeminiApi(history, getTools());
