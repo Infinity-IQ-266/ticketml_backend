@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService {
             String location = event.getLocation();
             String eventImage = event.getImageUrl();
             String time = event.getStartDate()
-                    .format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy", new Locale("vi", "VN")));
+                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("vi", "VN")));
 
             StringBuilder htmlContent = new StringBuilder();
             htmlContent.append("<!DOCTYPE html>");
