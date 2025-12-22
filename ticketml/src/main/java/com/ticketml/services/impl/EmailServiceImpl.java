@@ -47,12 +47,14 @@ public class EmailServiceImpl implements EmailService {
 
             helper.setFrom(senderEmail);
             helper.setTo(to);
-            helper.setSubject("🎫 Vé điện tử TicketML - Đơn hàng #" + order.getId());
+            helper.setSubject("Vé tham dự sự kiện - Đơn hàng #" + order.getId());
 
-            String eventName = tickets.get(0).getTicketType().getEvent().getTitle();
-            String location = tickets.get(0).getTicketType().getEvent().getLocation();
-            String time = tickets.get(0).getTicketType().getEvent().getStartDate()
-                    .format(DateTimeFormatter.ofPattern("dd/MM/yyyy", new Locale("vi", "VN")));
+            var event = tickets.get(0).getTicketType().getEvent();
+            String eventName = event.getTitle();
+            String location = event.getLocation();
+            String eventImage = event.getImageUrl();
+            String time = event.getStartDate()
+                    .format(DateTimeFormatter.ofPattern("HH:mm - dd/MM/yyyy", new Locale("vi", "VN")));
 
             StringBuilder htmlContent = new StringBuilder();
             htmlContent.append("<!DOCTYPE html>");
@@ -61,72 +63,80 @@ public class EmailServiceImpl implements EmailService {
             htmlContent.append("<meta charset='UTF-8'>");
             htmlContent.append("<meta name='viewport' content='width=device-width, initial-scale=1.0'>");
             htmlContent.append("<style>");
-            htmlContent.append("body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; }");
-            htmlContent.append(".container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }");
-            htmlContent.append(".header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px 20px; text-align: center; }");
-            htmlContent.append(".header h1 { margin: 0; font-size: 28px; font-weight: 600; }");
-            htmlContent.append(".header p { margin: 10px 0 0 0; font-size: 14px; opacity: 0.9; }");
-            htmlContent.append(".content { padding: 30px 20px; }");
-            htmlContent.append(".success-badge { background-color: #10b981; color: white; padding: 8px 16px; border-radius: 20px; display: inline-block; font-size: 14px; font-weight: 500; margin-bottom: 20px; }");
-            htmlContent.append(".event-info { background-color: #f8f9ff; border-left: 4px solid #667eea; padding: 20px; border-radius: 8px; margin: 20px 0; }");
-            htmlContent.append(".event-info p { margin: 8px 0; color: #333; font-size: 15px; line-height: 1.6; }");
-            htmlContent.append(".event-info strong { color: #667eea; font-weight: 600; display: inline-block; min-width: 100px; }");
-            htmlContent.append(".tickets-title { font-size: 20px; font-weight: 600; color: #333; margin: 30px 0 20px 0; padding-bottom: 10px; border-bottom: 2px solid #667eea; }");
-            htmlContent.append(".ticket-card { background: linear-gradient(to right, #ffffff 0%, #f8f9ff 100%); border: 2px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; }");
-            htmlContent.append(".ticket-card::before { content: ''; position: absolute; top: 0; left: 0; width: 5px; height: 100%; background: linear-gradient(180deg, #667eea 0%, #764ba2 100%); }");
-            htmlContent.append(".ticket-header { margin-left: 15px; margin-bottom: 15px; }");
-            htmlContent.append(".ticket-type { font-size: 18px; font-weight: 600; color: #333; margin: 0 0 8px 0; }");
-            htmlContent.append(".ticket-code { font-size: 13px; color: #6b7280; font-family: 'Courier New', monospace; background-color: #f3f4f6; padding: 4px 8px; border-radius: 4px; display: inline-block; }");
-            htmlContent.append(".qr-container { text-align: center; margin-top: 15px; padding: 15px; background-color: white; border-radius: 8px; border: 1px solid #e5e7eb; }");
-            htmlContent.append(".qr-container img { border-radius: 8px; }");
-            htmlContent.append(".footer { background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 13px; line-height: 1.6; }");
-            htmlContent.append(".footer strong { color: #667eea; }");
-            htmlContent.append(".divider { height: 1px; background: linear-gradient(to right, transparent, #e5e7eb, transparent); margin: 20px 0; }");
+            htmlContent.append("body { margin: 0; padding: 0; font-family: 'Inter', 'Segoe UI', Helvetica, Arial, sans-serif; background-color: #f3f4f6; color: #374151; }");
+            htmlContent.append(".container { max-width: 600px; margin: 40px auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }");
+
+            htmlContent.append(".banner { width: 100%; height: 200px; object-fit: cover; background-color: #e5e7eb; display: block; }");
+
+            htmlContent.append(".content { padding: 40px 30px; }");
+
+            htmlContent.append(".header-title { margin: 0 0 10px 0; font-size: 24px; font-weight: 700; color: #111827; letter-spacing: -0.5px; }");
+            htmlContent.append(".order-ref { font-size: 14px; color: #6b7280; margin-bottom: 24px; display: block; }");
+
+            htmlContent.append(".event-details { background-color: #f9fafb; border-radius: 12px; padding: 20px; margin-bottom: 30px; border: 1px solid #e5e7eb; }");
+            htmlContent.append(".detail-row { display: flex; margin-bottom: 12px; align-items: flex-start; }");
+            htmlContent.append(".detail-row:last-child { margin-bottom: 0; }");
+            htmlContent.append(".detail-icon { width: 20px; margin-right: 12px; color: #6366f1; }"); // Indigo color
+            htmlContent.append(".detail-text { font-size: 15px; color: #4b5563; line-height: 1.5; }");
+            htmlContent.append(".detail-text strong { color: #1f2937; font-weight: 600; display: block; margin-bottom: 2px; }");
+
+            htmlContent.append(".divider { height: 1px; background-color: #e5e7eb; margin: 30px 0; }");
+
+            htmlContent.append(".ticket-section-title { font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 20px; }");
+
+            htmlContent.append(".ticket-card { border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; margin-bottom: 20px; display: flex; flex-direction: column; align-items: center; background-color: #fff; transition: all 0.2s; }");
+            htmlContent.append(".ticket-type-badge { background-color: #eef2ff; color: #6366f1; padding: 6px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 15px; display: inline-block; }");
+            htmlContent.append(".qr-box { padding: 10px; background: #fff; border-radius: 8px; }");
+            htmlContent.append(".qr-box img { display: block; border-radius: 8px; }");
+            htmlContent.append(".ticket-code { margin-top: 15px; font-family: 'Courier New', monospace; font-size: 14px; color: #6b7280; background: #f3f4f6; padding: 4px 12px; border-radius: 6px; letter-spacing: 1px; }");
+
+            htmlContent.append(".footer { background-color: #fafafa; padding: 20px; text-align: center; border-top: 1px solid #f3f4f6; }");
+            htmlContent.append(".footer p { margin: 5px 0; font-size: 13px; color: #9ca3af; }");
+            htmlContent.append(".brand { font-weight: 600; color: #6366f1; text-decoration: none; }");
             htmlContent.append("</style>");
             htmlContent.append("</head>");
             htmlContent.append("<body>");
 
             htmlContent.append("<div class='container'>");
 
-            // Header
-            htmlContent.append("<div class='header'>");
-            htmlContent.append("<h1>TicketML</h1>");
-            htmlContent.append("<p>Vé điện tử của bạn đã sẵn sàng!</p>");
-            htmlContent.append("</div>");
+            String bannerSrc = (eventImage != null && !eventImage.isEmpty()) ? eventImage : "https://via.placeholder.com/600x200/6366f1/ffffff?text=" + eventName;
+            htmlContent.append("<img class='banner' src='").append(bannerSrc).append("' alt='Event Banner' />");
 
-            // Content
             htmlContent.append("<div class='content'>");
-            htmlContent.append("<span class='success-badge'>✓ Thanh toán thành công</span>");
-            htmlContent.append("<p style='color: #6b7280; font-size: 14px; margin-top: 10px;'>Mã đơn hàng: <strong>#").append(order.getId()).append("</strong></p>");
 
-            // Event Info
-            htmlContent.append("<div class='event-info'>");
-            htmlContent.append("<p><strong>Sự kiện:</strong> ").append(eventName).append("</p>");
-            htmlContent.append("<p><strong>Thời gian:</strong> ").append(time).append("</p>");
-            htmlContent.append("<p><strong>Địa điểm:</strong> ").append(location).append("</p>");
+            htmlContent.append("<h1 class='header-title'>Bạn đã đặt vé thành công!</h1>");
+            htmlContent.append("<span class='order-ref'>Mã đơn hàng: #").append(order.getId()).append("</span>");
+
+            htmlContent.append("<div class='event-details'>");
+            htmlContent.append("<div class='detail-row'>");
+            htmlContent.append("<div class='detail-text'><strong>Sự kiện</strong>").append(eventName).append("</div>");
+            htmlContent.append("</div>");
+            htmlContent.append("<div class='detail-row'>");
+            htmlContent.append("<div class='detail-text'><strong>Thời gian</strong>").append(time).append("</div>");
+            htmlContent.append("</div>");
+            htmlContent.append("<div class='detail-row'>");
+            htmlContent.append("<div class='detail-text'><strong>Địa điểm</strong>").append(location).append("</div>");
+            htmlContent.append("</div>");
             htmlContent.append("</div>");
 
             htmlContent.append("<div class='divider'></div>");
 
-            // Tickets
-            htmlContent.append("<h3 class='tickets-title'>Danh sách vé của bạn</h3>");
+            htmlContent.append("<div class='ticket-section-title'>Vé điện tử của bạn</div>");
 
             for (Ticket ticket : tickets) {
                 htmlContent.append("<div class='ticket-card'>");
-                htmlContent.append("<div class='ticket-header'>");
-                htmlContent.append("<p class='ticket-type'>").append(ticket.getTicketType().getType()).append("</p>");
-                htmlContent.append("<span class='ticket-code'>Mã vé: ").append(ticket.getQrCode()).append("</span>");
+                htmlContent.append("<span class='ticket-type-badge'>").append(ticket.getTicketType().getType()).append("</span>");
+
+                htmlContent.append("<div class='qr-box'>");
+                htmlContent.append("<img src='cid:qr-").append(ticket.getQrCode()).append("' width='160' height='160' alt='QR Code' />");
                 htmlContent.append("</div>");
-                htmlContent.append("<div class='qr-container'>");
-                htmlContent.append("<img src='cid:qr-").append(ticket.getQrCode()).append("' width='180' height='180' alt='QR Code' />");
-                htmlContent.append("<p style='margin-top: 10px; font-size: 12px; color: #6b7280;'>Quét mã QR để soát vé</p>");
-                htmlContent.append("</div>");
+
+                htmlContent.append("<div class='ticket-code'>").append(ticket.getQrCode()).append("</div>");
                 htmlContent.append("</div>");
             }
 
             htmlContent.append("</div>");
 
-            // Footer
             htmlContent.append("<div class='footer'>");
             htmlContent.append("<strong>Lưu ý quan trọng</strong><br/>");
             htmlContent.append("Vui lòng xuất trình mã QR này tại quầy soát vé khi tham dự sự kiện.<br/>");
@@ -141,7 +151,7 @@ public class EmailServiceImpl implements EmailService {
             helper.setText(htmlContent.toString(), true);
 
             for (Ticket ticket : tickets) {
-                byte[] qrImage = generateQRCode(ticket.getQrCode(), 250, 250);
+                byte[] qrImage = generateQRCode(ticket.getQrCode(), 300, 300);
                 ByteArrayResource resource = new ByteArrayResource(qrImage);
                 helper.addInline("qr-" + ticket.getQrCode(), resource, "image/png");
             }
